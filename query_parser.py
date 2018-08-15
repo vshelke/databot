@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from statistics import mean, median, stdev
 
 # load metadata
-df = pd.read_csv('../dataset.csv')
+df = pd.read_csv('dataset.csv')
 states_list = df['State'].unique()
 districts_list = df['District'].unique()
 cols = list(df)
