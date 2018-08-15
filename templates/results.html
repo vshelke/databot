@@ -1,0 +1,143 @@
+{% extends 'index.html' %} {% block main %}
+
+<div class="container">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                Jaano
+                <b>India</b>
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form action="/search" method="GET">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <input style="width: 500px" class="input" value="{{ data.query }}" name="q" type="text" placeholder="Search...">
+                            </p>
+                            <p class="control">
+                                <button class="button is-info" type="submit">
+                                    Search
+                                </button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script>
+        console.log('{{ data.results }}')
+    </script>
+    <hr>
+    <h5>
+        {% if data.results.rows|length == 0 %} Did you mean:
+        <b>
+            <a href="/search?q={{ data.results.corrected_query }}">{{ data.results.corrected_query }}</a>
+        </b>
+        {% else %} Showing results for:
+        <b>{{ data.query }}</b>
+        {% endif %}
+    </h5>
+    <br>
+    <div class="columns">
+        <div class="column is-three-fifths">
+            {% for box in data.results.rows %}
+            <div class="box">
+                <div class="content">
+                    <div class="columns">
+                        <div class="column">
+                            <h3>{{ box.state }}</h3>
+                            <p>{{ box.district }}</p>
+                            <b>{{ data.results.feature }}</b>
+                        </div>
+                        <div class="column">
+                            <div class="columns">
+                                <div class="column">
+                                    {% if data.results.metric == '%' %}
+                                    <input type="text" value="{{ box.tier.total }}" class="dial"> {% else %}
+                                    <h2 align="center">
+                                        <span class="pnos">{{ box.tier.total }}</span>
+                                    </h2>
+                                    {% endif %}
+                                    <p align="center">
+                                        <b>Total {{ data.results.metric }}</b>
+                                    </p>
+                                </div>
+                                <div class="column">
+                                    {% if data.results.metric == '%' %}
+                                    <input type="text" value="{{ box.tier.rural }}" class="dial-rural"> {% else %}
+                                    <h2 align="center">
+                                        <span class="pnos">{{ box.tier.rural }}</span>
+                                    </h2>
+                                    {% endif %}
+                                    <p align="center">
+                                        <b>Rural {{ data.results.metric }}</b>
+                                    </p>
+                                </div>
+                                <div class="column">
+                                    {% if data.results.metric == '%' %}
+                                    <input type="text" value="{{ box.tier.urban }}" class="dial-urban"> {% else %}
+                                    <h2 align="center">
+                                        <span class="pnos">{{ box.tier.urban }}</span>
+                                    </h2>
+                                    {% endif %}
+                                    <p align="center">
+                                        <b>Urban {{ data.results.metric }}</b>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="column">
+            <div class="box" style="position: fixed;width: 31%;">
+                <div class="content">
+                    <h3>Overall Statistics</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Mean</th>
+                                <th>Median</th>
+                                <th>Std. Deviation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total</td>
+                                <td>{{ data.results.meta.total.mean }}</td>
+                                <td>{{ data.results.meta.total.median }}</td>
+                                <td>{{ data.results.meta.total.stdev }}</td>
+                            </tr>
+                            <tr>
+                                <td>Rural</td>
+                                <td>{{ data.results.meta.rural.mean }}</td>
+                                <td>{{ data.results.meta.rural.median }}</td>
+                                <td>{{ data.results.meta.rural.stdev }}</td>
+                            </tr>
+                            <tr>
+                                <td>Urban</td>
+                                <td>{{ data.results.meta.urban.mean }}</td>
+                                <td>{{ data.results.meta.urban.median }}</td>
+                                <td>{{ data.results.meta.urban.stdev }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

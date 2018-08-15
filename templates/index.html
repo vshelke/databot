@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Jaano India Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="static/css/main.css" />
+</head>
+
+<body>
+    {% block main %}
+    {% endblock %}
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/jquery.knob.min.js"></script>
+    <script src="static/js/nos.js"></script>
+    <script>
+        $(function() {
+            $(".dial").knob({
+                'readOnly': true,
+                'height': '85px',
+                'width': '85px'
+            });
+            $(".dial-rural").knob({
+                'readOnly': true,
+                'height': '85px',
+                'width': '85px',
+                'fgColor': '#794c13'
+            });
+            $(".dial-urban").knob({
+                'readOnly': true,
+                'height': '85px',
+                'width': '85px',
+                'fgColor': '#54595C'
+            });
+            $('.pnos').prettyNumber();
+        });
+    </script>
+</body>
+
+</html>
