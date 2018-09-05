@@ -1,17 +1,10 @@
 {% extends 'index.html' %} {% block main %}
-
 <div class="container">
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
                 Jaano
                 <b>India</b>
-            </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
             </a>
         </div>
         <div class="navbar-menu">
@@ -33,15 +26,10 @@
             </div>
         </div>
     </nav>
-    <script>
-        console.log('{{ data.results }}')
-    </script>
     <hr>
     <h5>
         {% if data.results.rows|length == 0 %} Did you mean:
-        <b>
-            <a href="/search?q={{ data.results.corrected_query }}">{{ data.results.corrected_query }}</a>
-        </b>
+        <b><a href="/search?q={{ data.results.corrected_query }}">{{ data.results.corrected_query }}</a></b>
         {% else %} Showing results for:
         <b>{{ data.query }}</b>
         {% endif %}
@@ -60,39 +48,22 @@
                         </div>
                         <div class="column">
                             <div class="columns">
-                                <div class="column">
-                                    {% if data.results.metric == '%' %}
-                                    <input type="text" value="{{ box.tier.total }}" class="dial"> {% else %}
-                                    <h2 align="center">
-                                        <span class="pnos">{{ box.tier.total }}</span>
-                                    </h2>
-                                    {% endif %}
-                                    <p align="center">
-                                        <b>Total {{ data.results.metric }}</b>
-                                    </p>
-                                </div>
-                                <div class="column">
-                                    {% if data.results.metric == '%' %}
-                                    <input type="text" value="{{ box.tier.rural }}" class="dial-rural"> {% else %}
-                                    <h2 align="center">
-                                        <span class="pnos">{{ box.tier.rural }}</span>
-                                    </h2>
-                                    {% endif %}
-                                    <p align="center">
-                                        <b>Rural {{ data.results.metric }}</b>
-                                    </p>
-                                </div>
-                                <div class="column">
-                                    {% if data.results.metric == '%' %}
-                                    <input type="text" value="{{ box.tier.urban }}" class="dial-urban"> {% else %}
-                                    <h2 align="center">
-                                        <span class="pnos">{{ box.tier.urban }}</span>
-                                    </h2>
-                                    {% endif %}
-                                    <p align="center">
-                                        <b>Urban {{ data.results.metric }}</b>
-                                    </p>
-                                </div>
+                                {% macro info(name, metric, value, class) %}
+                                    <div class="column">
+                                        {% if metric == '%' %}
+                                        <input type="text" value="{{ value }}" class="{{ class }}"> {% else %}
+                                        <h2 align="center">
+                                            <span class="pnos">{{ value }}</span>
+                                        </h2>
+                                        {% endif %}
+                                        <p align="center">
+                                            <b>{{ name }} {{ metric }}</b>
+                                        </p>
+                                    </div>
+                                {% endmacro %}
+                                {{ info('Total', data.results.metric, box.tier.total, 'dial') }}
+                                {{ info('Rural', data.results.metric, box.tier.rural, 'dial-rural') }}
+                                {{ info('Urban', data.results.metric, box.tier.urban, 'dial-urban') }}
                             </div>
                         </div>
                     </div>
@@ -100,6 +71,7 @@
             </div>
             {% endfor %}
         </div>
+        {% set meta = data.results.meta %}
         <div class="column">
             <div class="box" style="position: fixed;width: 31%;">
                 <div class="content">
@@ -114,24 +86,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Total</td>
-                                <td>{{ data.results.meta.total.mean }}</td>
-                                <td>{{ data.results.meta.total.median }}</td>
-                                <td>{{ data.results.meta.total.stdev }}</td>
-                            </tr>
-                            <tr>
-                                <td>Rural</td>
-                                <td>{{ data.results.meta.rural.mean }}</td>
-                                <td>{{ data.results.meta.rural.median }}</td>
-                                <td>{{ data.results.meta.rural.stdev }}</td>
-                            </tr>
-                            <tr>
-                                <td>Urban</td>
-                                <td>{{ data.results.meta.urban.mean }}</td>
-                                <td>{{ data.results.meta.urban.median }}</td>
-                                <td>{{ data.results.meta.urban.stdev }}</td>
-                            </tr>
+                            {% macro row(name, mean, median, stdev) %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>{{ mean }}</td>
+                                    <td>{{ median }}</td>
+                                    <td>{{ stdev }}</td>
+                                </tr>
+                            {% endmacro %}
+                            {{ row('Total', meta.total.mean, meta.total.median, meta.total.stdev) }}
+                            {{ row('Rural', meta.rural.mean, meta.rural.median, meta.rural.stdev) }}
+                            {{ row('Urban', meta.urban.mean, meta.urban.median, meta.urban.stdev) }}
                         </tbody>
                     </table>
                 </div>
@@ -139,5 +104,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
