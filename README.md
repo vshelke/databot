@@ -1,4 +1,6 @@
-# databot
+# databot 
+[![Codeship Status for vshelke/databot](https://app.codeship.com/projects/97219030-b4fb-0136-f9e5-32589ba82fe2/status?branch=master)](https://app.codeship.com/projects/311332)
+
 A databot made for jaano india iniative.
 
 # install and run
